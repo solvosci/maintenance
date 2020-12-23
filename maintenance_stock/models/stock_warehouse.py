@@ -43,6 +43,8 @@ class StockWarehouse(models.Model):
                     "default_location_dest_id": self.wh_cons_loc_id.id,
                     "sequence": max_sequence_new,
                     "barcode": self.code.replace(" ", "").upper() + "-CONS",
+                    "sequence_code": "CONS",
+                    "company_id": self.company_id.id,                    
                 },
             },
             max_sequence_new + 1,
@@ -64,9 +66,9 @@ class StockWarehouse(models.Model):
             },
         }
 
-    def _get_locations_values(self, vals):
+    def _get_locations_values(self, vals, code=False):
         sub_locations = super()._get_locations_values(vals)
-        code = vals.get("code") or self.code
+        code = vals.get("code") or code
         code = code.replace(" ", "").upper()
         company_id = vals.get("company_id", self.company_id.id)
         return {

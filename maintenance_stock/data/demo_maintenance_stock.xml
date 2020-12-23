@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data noupdate="1">
+        <record id="location_inventory" model="stock.location">
+            <field name="name">Inventory adjustment</field>
+            <field name="location_id" ref="stock.stock_location_locations_virtual"/>
+            <field name="usage">inventory</field>
+            <field name="company_id"></field>
+        </record>    
         <record id="stock_warehouse_maintenance" model="stock.warehouse">
             <field name="name">Maintenance Warehouse</field>
             <field name="partner_id" ref="stock.res_partner_address_41" />
@@ -34,17 +40,16 @@
             <field name="standard_price">70.0</field>
             <field name="uom_id" ref="uom.product_uom_unit" />
             <field name="uom_po_id" ref="uom.product_uom_unit" />
-            <field name="property_stock_inventory" ref="stock.location_inventory" />
+            <field name="property_stock_inventory" ref="maintenance_stock.location_inventory" />
             <field
-                name="image"
+                name="image_variant_512"
                 type="base64"
                 file="maintenance_stock/static/img/toner.png"
             />
         </record>
-        <record id="stock_inventory_toner" model="stock.inventory">
+        <!--record id="stock_inventory_toner" model="stock.inventory">
             <field name="name">Inventory for Toner</field>
-            <field name="filter">product</field>
-            <field name="product_id" ref="maintenance_stock.product_toner" />
+            <field name="product_ids" eval="[(4, ref('maintenance_stock.product_toner'))]" />
         </record>
         <record id="stock_inventory_toner_line" model="stock.inventory.line">
             <field name="product_id" ref="maintenance_stock.product_toner" />
@@ -59,7 +64,7 @@
                 model="stock.inventory"
                 name="search"
             />
-        </function>
+        </function-->
         <record id="maintenance.equipment_printer1" model="maintenance.equipment">
             <field name="allow_consumptions" eval="True" />
             <field
@@ -84,6 +89,7 @@
                 name="picking_type_id"
                 ref="maintenance_stock.main_picking_type_cons"
             />
+            <field name="company_id" ref="stock.res_company_1" />
             <field name="date" eval="DateTime.today() - timedelta(days=15)" />
             <field name="location_id" ref="maintenance_stock.main_location_stock" />
             <field name="location_dest_id" ref="maintenance_stock.main_location_cons" />
@@ -99,6 +105,7 @@
                 'picking_type_id': ref('maintenance_stock.main_picking_type_cons'),
                 'location_id': ref('maintenance_stock.main_location_stock'),
                 'location_dest_id': ref('maintenance_stock.main_location_cons'),
+                'company_id': ref('stock.res_company_1'),
                 'move_line_ids': [(0, 0, {
                     'product_id': ref('maintenance_stock.product_toner'),
                     'qty_done': 1,
